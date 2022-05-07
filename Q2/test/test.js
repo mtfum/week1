@@ -35,21 +35,26 @@ describe("HelloWorld", function () {
 
     it("Should return true for correct proof", async function () {
         //[assignment] Add comments to explain what each line is doing
+        // This line passes an object to the Groth16 instance that has a=1 and b=2 as initial values.
+        // Also, by passing wasm and zkey, the same as the actual execution environment is reproduced.
         const { proof, publicSignals } = await groth16.fullProve({"a":"1","b":"2"}, "contracts/circuits/HelloWorld/HelloWorld_js/HelloWorld.wasm","contracts/circuits/HelloWorld/circuit_final.zkey");
 
         console.log('1x2 =',publicSignals[0]);
-
+        // These lines convert the values obtained by probe by unstringifyBigInts defined above.
+        // Also, the edited values are used to change the hexadecimal notation
         const editedPublicSignals = unstringifyBigInts(publicSignals);
         const editedProof = unstringifyBigInts(proof);
         const calldata = await groth16.exportSolidityCallData(editedProof, editedPublicSignals);
     
+        // change the resulting calldata to BigInt type
         const argv = calldata.replace(/["[\]\s]/g, "").split(',').map(x => BigInt(x).toString());
     
+        // Prepare each of the variables that the verifier will use for lighting
         const a = [argv[0], argv[1]];
         const b = [[argv[2], argv[3]], [argv[4], argv[5]]];
         const c = [argv[6], argv[7]];
         const Input = argv.slice(8);
-
+        // Write a method that actually calls the method from the constants created above and passes if the return value is true.
         expect(await verifier.verifyProof(a, b, c, Input)).to.be.true;
     });
     it("Should return false for invalid proof", async function () {
