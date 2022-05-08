@@ -3,7 +3,7 @@ const solidityRegex = 'pragma solidity ^0.6.11';
 
 const verifierRegex = /contract Verifier/;
 
-for (const s of ['HelloWorldVerifier', 'Multiplier3']) {
+for (const s of ['HelloWorldVerifier', 'Multiplier3', 'Multiplier3_plonk']) {
 	let content = fs.readFileSync(`./contracts/${s}.sol`, {
 		encoding: 'utf-8',
 	});
