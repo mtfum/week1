@@ -26,6 +26,7 @@ template Multiplier3 () {
    multiplier1.b <== b;
    multiplier2.a <== multiplier1.c;
    multiplier2.b <== c;
+   d <== multiplier2.c;
 }
 
 component main = Multiplier3();
