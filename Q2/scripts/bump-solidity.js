@@ -1,12 +1,15 @@
-const fs = require("fs");
-const solidityRegex = /pragma solidity \^\d+\.\d+\.\d+/
+const fs = require('fs');
+const solidityRegex = 'pragma solidity ^0.6.11';
 
-const verifierRegex = /contract Verifier/
+const verifierRegex = /contract Verifier/;
 
-let content = fs.readFileSync("./contracts/HelloWorldVerifier.sol", { encoding: 'utf-8' });
-let bumped = content.replace(solidityRegex, 'pragma solidity ^0.8.0');
-bumped = bumped.replace(verifierRegex, 'contract HelloWorldVerifier');
-
-fs.writeFileSync("./contracts/HelloWorldVerifier.sol", bumped);
+for (const s of ['HelloWorldVerifier', 'Multiplier3', 'Multiplier3_plonk']) {
+	let content = fs.readFileSync(`./contracts/${s}.sol`, {
+		encoding: 'utf-8',
+	});
+	let bumped = content.replace(solidityRegex, 'pragma solidity ^0.8.0');
+	bumped = bumped.replace(verifierRegex, `contract ${s}`);
+	fs.writeFileSync(`./contracts/${s}.sol`, bumped);
+}
 
 // [assignment] add your own scripts below to modify the other verifier contracts you will build during the assignment
